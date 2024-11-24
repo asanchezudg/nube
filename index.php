@@ -352,6 +352,34 @@
             padding-top: 10px;
             border-top: 1px solid #eee;
         }
+
+        .movie-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .movie-info {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .movie-synopsis {
+            color: #444;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            /* Quitamos las propiedades de truncamiento para mostrar todo el texto */
+            display: block;
+            -webkit-line-clamp: unset;
+            -webkit-box-orient: unset;
+            overflow: visible;
+        }
     </style>
 </head>
 <body>
