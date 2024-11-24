@@ -10,14 +10,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8", $user, $pass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $stmt = $pdo->prepare("UPDATE movies SET title = ?, year = ?, synopsis = ?, cover = ? WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE movies SET title = ?, year = ?, synopsis = ?, cover = ?, trailer = ? WHERE id = ?");
         
         $stmt->execute([
             $_POST['title'],
             $_POST['year'],
             $_POST['synopsis'],
             $_POST['cover'],
-            $_POST['id']
+            $_POST['id'],
+            $_POST['trailer'],
+
         ]);
 
         header('Location: index.php?success=1');
