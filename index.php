@@ -424,9 +424,10 @@
                         </div>
                         <div class="form-group">
                             <label for="trailer">URL del Trailer (YouTube):</label>
-                            <input type="url" id="trailer" name="trailer" placeholder="https://www.youtube.com/embed/..." required>
+                            <input type="url" id="trailer" name="trailer" 
+                                placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..." 
+                                onchange="this.value = convertToEmbedUrl(this.value)" required>
                         </div>
-                        <button type="submit" class="submit-btn">Agregar Película</button>
                     </form>
                 </div>
             </div>
@@ -460,7 +461,9 @@
                         </div>
                         <div class="form-group">
                             <label for="edit-trailer">URL del Trailer (YouTube):</label>
-                            <input type="url" id="edit-trailer" name="trailer" placeholder="https://www.youtube.com/embed/..." required>
+                            <input type="url" id="edit-trailer" name="trailer" 
+                                placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..." 
+                                onchange="this.value = convertToEmbedUrl(this.value)" required>
                         </div>
                         <button type="submit" class="submit-btn">Guardar Cambios</button>
                     </form>
@@ -558,7 +561,7 @@
             document.getElementById('edit-year').value = movie.year;
             document.getElementById('edit-synopsis').value = movie.synopsis;
             document.getElementById('edit-cover').value = movie.cover;
-            document.getElementById('edit-trailer').value = movie.trailer;
+            document.getElementById('edit-trailer').value = movie.trailer ? convertToEmbedUrl(movie.trailer) : '';
             
             openModal('editModal');
         }
@@ -593,6 +596,31 @@
                     card.style.display = "none";
                 }
             }
+        }
+
+        function convertToEmbedUrl(url) {
+            // Si ya es una URL de embed, retornarla tal cual
+            if (url.includes('embed')) {
+                return url;
+            }
+            
+            // Convertir URL normal de YouTube a formato embed
+            let videoId = '';
+            
+            // Formato: https://youtu.be/XXXXXXXXXXX
+            if (url.includes('youtu.be')) {
+                videoId = url.split('youtu.be/')[1];
+            } 
+            // Formato: https://www.youtube.com/watch?v=XXXXXXXXXXX
+            else if (url.includes('youtube.com/watch')) {
+                videoId = new URL(url).searchParams.get('v');
+            }
+            
+            // Remover parámetros adicionales (como ?si=...)
+            videoId = videoId.split('?')[0];
+            videoId = videoId.split('&')[0];
+            
+            return `https://www.youtube.com/embed/${videoId}`;
         }
     </script>
 </body>
