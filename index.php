@@ -622,6 +622,15 @@
             
             return `https://www.youtube.com/embed/${videoId}`;
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Actualizar los placeholders con ejemplos más claros
+            const trailerInputs = document.querySelectorAll('input[name="trailer"]');
+            const placeholder = "Ejemplo: https://www.youtube.com/watch?v=xxx o https://youtu.be/xxx";
+            trailerInputs.forEach(input => {
+                input.placeholder = placeholder;
+            });
+        });
     </script>
 </body>
 </html>
