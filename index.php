@@ -310,24 +310,48 @@
         }
 
         .search-bar {
-    width: 100%;
-    max-width: 400px;
-    padding: 10px 15px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
 
-.search-bar:focus {
-    outline: none;
-    border-color: #4CAF50;
-    box-shadow: 0 0 5px rgba(74, 175, 80, 0.2);
-}
+        .search-bar:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(74, 175, 80, 0.2);
+        }
 
-.movie-card.hidden {
-    display: none;
-}
+        .movie-card.hidden {
+            display: none;
+        }
+
+        .trailer-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Ratio 16:9 */
+            height: 0;
+            overflow: hidden;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+
+        .trailer-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .trailer-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
@@ -451,6 +475,15 @@
                         echo '<h2 class="movie-title">' . htmlspecialchars($movie['title']) . '</h2>';
                         echo '<div class="movie-year">Año: ' . htmlspecialchars($movie['year']) . '</div>';
                         echo '<p class="movie-synopsis">' . htmlspecialchars($movie['synopsis']) . '</p>';
+                        if (!empty($movie['trailer'])) {
+                            echo '<div class="trailer-section">';
+                            echo '<div class="trailer-container">';
+                            echo '<iframe src="' . htmlspecialchars($movie['trailer']) . '" 
+                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                          allowfullscreen></iframe>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
                         echo '</div>';
                         echo '<div class="movie-actions">';
                         echo '<button class="btn btn-edit" onclick="editMovie(' . htmlspecialchars(json_encode($movie)) . ')">Editar</button>';
