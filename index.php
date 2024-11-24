@@ -308,6 +308,26 @@
             color: #a94442;
             border: 1px solid #ebccd1;
         }
+
+        .search-bar {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.search-bar:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(74, 175, 80, 0.2);
+}
+
+.movie-card.hidden {
+    display: none;
+}
     </style>
 </head>
 <body>
@@ -353,6 +373,10 @@
                         <button type="submit" class="submit-btn">Agregar Película</button>
                     </form>
                 </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Buscar películas..." onkeyup="filterMovies()">
             </div>
 
             <!-- Modal para editar película -->
@@ -469,6 +493,26 @@
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 event.target.style.display = 'none';
+            }
+        }
+
+        function filterMovies() {
+            const searchInput = document.getElementById('searchInput');
+            const filter = searchInput.value.toLowerCase();
+            const movieCards = document.getElementsByClassName('movie-card');
+
+            for (let card of movieCards) {
+                const title = card.querySelector('.movie-title').textContent.toLowerCase();
+                const year = card.querySelector('.movie-year').textContent.toLowerCase();
+                const synopsis = card.querySelector('.movie-synopsis').textContent.toLowerCase();
+                
+                if (title.includes(filter) || 
+                    year.includes(filter) || 
+                    synopsis.includes(filter)) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
             }
         }
     </script>
