@@ -514,6 +514,15 @@
                         }
                         echo '</div>';
                         echo '<div class="movie-actions">';
+
+                        $movieData = [
+                            'id' => $movie['id'],
+                            'title' => $movie['title'],
+                            'year' => $movie['year'],
+                            'synopsis' => $movie['synopsis'],
+                            'cover' => $movie['cover'],
+                            'trailer' => $movie['trailer']
+                        ];
                         echo '<button class="btn btn-edit" onclick="editMovie(' . htmlspecialchars(json_encode($movie)) . ')">Editar</button>';
                         echo '<button class="btn btn-delete" onclick="confirmDelete(' . $movie['id'] . ')">Eliminar</button>';
                         echo '</div>';
