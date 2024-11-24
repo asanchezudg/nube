@@ -370,6 +370,10 @@
                             <label for="cover">URL de la Portada:</label>
                             <input type="url" id="cover" name="cover" required>
                         </div>
+                        <div class="form-group">
+                            <label for="trailer">URL del Trailer (YouTube):</label>
+                            <input type="url" id="trailer" name="trailer" placeholder="https://www.youtube.com/embed/..." required>
+                        </div>
                         <button type="submit" class="submit-btn">Agregar Película</button>
                     </form>
                 </div>
@@ -401,6 +405,10 @@
                         <div class="form-group">
                             <label for="edit-cover">URL de la Portada:</label>
                             <input type="url" id="edit-cover" name="cover" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-trailer">URL del Trailer (YouTube):</label>
+                            <input type="url" id="edit-trailer" name="trailer" placeholder="https://www.youtube.com/embed/..." required>
                         </div>
                         <button type="submit" class="submit-btn">Guardar Cambios</button>
                     </form>
@@ -480,6 +488,7 @@
             document.getElementById('edit-year').value = movie.year;
             document.getElementById('edit-synopsis').value = movie.synopsis;
             document.getElementById('edit-cover').value = movie.cover;
+            document.getElementById('edit-trailer').value = movie.trailer;
             
             openModal('editModal');
         }
