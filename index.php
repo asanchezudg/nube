@@ -401,31 +401,7 @@
             <button class="add-button" onclick="openModal('movieModal')">Agregar Nueva Película</button>
 
             <!-- Modal para agregar película -->
-            <form class="movie-form" id="addMovieForm" onsubmit="return submitMovie(event)">
-                <div class="form-group">
-                    <label for="title">Título:</label>
-                    <input type="text" id="title" name="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="year">Año:</label>
-                    <input type="number" id="year" name="year" required min="1900" max="2024">
-                </div>
-                <div class="form-group">
-                    <label for="synopsis">Sinopsis:</label>
-                    <textarea id="synopsis" name="synopsis" rows="4" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="cover">URL de la Portada:</label>
-                    <input type="url" id="cover" name="cover" required>
-                </div>
-                <div class="form-group">
-                    <label for="trailer">URL del Trailer (YouTube):</label>
-                    <input type="url" id="trailer" name="trailer" 
-                        placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..." 
-                        onchange="this.value = convertToEmbedUrl(this.value)" required>
-                </div>
-                <button type="submit" class="submit-btn">Agregar Película</button>
-            </form>
+            
 
             <div style="margin-bottom: 20px;">
                 <input type="text" id="searchInput" class="search-bar" placeholder="Buscar películas..." onkeyup="filterMovies()">
@@ -634,8 +610,8 @@
                 if (result.success) {
                     closeModal('movieModal');
                     form.reset();
-                    // Redirigir al index
-                    window.location.href = '/index.php?success=1';
+                    // Recargar la página actual en lugar de redirigir
+                    window.location.reload();
                 } else {
                     throw new Error(result.error || 'Error al agregar la película');
                 }
