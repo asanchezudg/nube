@@ -547,16 +547,20 @@
     </div>
 
     <script>
+        // Funciones de Modal
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'block';
+            if(modalId === 'movieModal') {
+                document.getElementById('addMovieForm').reset();
+            }
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
 
+        // Funciones de Película
         function editMovie(movie) {
-            // Llenar el formulario de edición con los datos de la película
             document.getElementById('edit-id').value = movie.id;
             document.getElementById('edit-title').value = movie.title;
             document.getElementById('edit-year').value = movie.year;
@@ -572,13 +576,7 @@
             openModal('deleteModal');
         }
 
-        // Cerrar modales al hacer clic fuera de ellos
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-        }
-
+        // Función de Búsqueda
         function filterMovies() {
             const searchInput = document.getElementById('searchInput');
             const filter = searchInput.value.toLowerCase();
@@ -599,90 +597,102 @@
             }
         }
 
+        // Funciones de URL de YouTube
         function convertToEmbedUrl(url) {
-            // Si ya es una URL de embed, retornarla tal cual
             if (url.includes('embed')) {
                 return url;
             }
             
-            // Convertir URL normal de YouTube a formato embed
             let videoId = '';
             
-            // Formato: https://youtu.be/XXXXXXXXXXX
             if (url.includes('youtu.be')) {
                 videoId = url.split('youtu.be/')[1];
             } 
-            // Formato: https://www.youtube.com/watch?v=XXXXXXXXXXX
             else if (url.includes('youtube.com/watch')) {
                 videoId = new URL(url).searchParams.get('v');
             }
             
-            // Remover parámetros adicionales (como ?si=...)
             videoId = videoId.split('?')[0];
             videoId = videoId.split('&')[0];
             
             return `https://www.youtube.com/embed/${videoId}`;
         }
 
-        function validateAndSubmit(event) {
-        event.preventDefault();
-        
-        const formData = new FormData(document.getElementById('addMovieForm'));
-        
-        fetch('/add_movie.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (response.ok) {
-                closeModal('movieModal');
-                window.location.reload();
-            } else {
-                throw new Error('Error al agregar la película');
+        // Funciones de Validación y Envío
+        async function submitMovie(event) {
+            event.preventDefault();
+            
+            if (!validateForm()) {
+                return false;
             }
-        })
-        .catch(error => {
-            alert('Error: ' + error.message);
-        });
 
-        return false;
-    }
+            const form = document.getElementById('addMovieForm');
+            const formData = new FormData(form);
 
-    function validateForm() {
-        const title = document.getElementById('title').value;
-        const year = document.getElementById('year').value;
-        const synopsis = document.getElementById('synopsis').value;
-        const cover = document.getElementById('cover').value;
-        const trailer = document.getElementById('trailer').value;
+            try {
+                const response = await fetch('/add_movie.php', {
+                    method: 'POST',
+                    body: formData
+                });
 
-        if (!title || !year || !synopsis || !cover || !trailer) {
-            alert('Por favor, complete todos los campos requeridos');
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        closeModal('movieModal');
+                        form.reset();
+                        setTimeout(() => {
+                            window.location.href = window.location.pathname + '?success=1';
+                        }, 500);
+                    } else {
+                        throw new Error(result.error || 'Error al agregar la película');
+                    }
+                } else {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+
             return false;
         }
 
-        if (year < 1900 || year > new Date().getFullYear()) {
-            alert('Por favor, ingrese un año válido');
-            return false;
+        function validateForm() {
+            const title = document.getElementById('title').value.trim();
+            const year = document.getElementById('year').value;
+            const synopsis = document.getElementById('synopsis').value.trim();
+            const cover = document.getElementById('cover').value.trim();
+            const trailer = document.getElementById('trailer').value.trim();
+
+            if (!title || !year || !synopsis || !cover || !trailer) {
+                alert('Por favor, complete todos los campos requeridos');
+                return false;
+            }
+
+            const currentYear = new Date().getFullYear();
+            if (year < 1900 || year > currentYear) {
+                alert('Por favor, ingrese un año válido (entre 1900 y ' + currentYear + ')');
+                return false;
+            }
+
+            return true;
         }
 
-        return true;
-    }
-
-    function openModal(modalId) {
-        document.getElementById(modalId).style.display = 'block';
-        if(modalId === 'movieModal') {
-            document.getElementById('addMovieForm').reset();
-        }
-    }
-
+        // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
-            // Actualizar los placeholders con ejemplos más claros
+            // Configuración de placeholders para inputs de trailer
             const trailerInputs = document.querySelectorAll('input[name="trailer"]');
             const placeholder = "Ejemplo: https://www.youtube.com/watch?v=xxx o https://youtu.be/xxx";
             trailerInputs.forEach(input => {
                 input.placeholder = placeholder;
             });
         });
+
+        // Cerrar modales al hacer clic fuera de ellos
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>

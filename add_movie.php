@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -13,6 +14,14 @@ try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Validar que todos los campos necesarios estén presentes
+    $requiredFields = ['title', 'year', 'synopsis', 'cover', 'trailer'];
+    foreach ($requiredFields as $field) {
+        if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
+            throw new Exception("El campo $field es requerido");
+        }
+    }
+
     $stmt = $pdo->prepare("INSERT INTO movies (title, year, synopsis, cover, trailer) VALUES (:title, :year, :synopsis, :cover, :trailer)");
     
     $stmt->bindParam(':title', $_POST['title']);
@@ -23,11 +32,16 @@ try {
     
     $stmt->execute();
     
-    http_response_code(200);
-    echo json_encode(['success' => true]);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Película agregada exitosamente'
+    ]);
 
-} catch(PDOException $e) {
+} catch(Exception $e) {
     http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
 }
 ?>
