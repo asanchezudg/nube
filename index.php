@@ -624,6 +624,57 @@
             return `https://www.youtube.com/embed/${videoId}`;
         }
 
+        function validateAndSubmit(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(document.getElementById('addMovieForm'));
+        
+        fetch('/add_movie.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                closeModal('movieModal');
+                window.location.reload();
+            } else {
+                throw new Error('Error al agregar la película');
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
+
+        return false;
+    }
+
+    function validateForm() {
+        const title = document.getElementById('title').value;
+        const year = document.getElementById('year').value;
+        const synopsis = document.getElementById('synopsis').value;
+        const cover = document.getElementById('cover').value;
+        const trailer = document.getElementById('trailer').value;
+
+        if (!title || !year || !synopsis || !cover || !trailer) {
+            alert('Por favor, complete todos los campos requeridos');
+            return false;
+        }
+
+        if (year < 1900 || year > new Date().getFullYear()) {
+            alert('Por favor, ingrese un año válido');
+            return false;
+        }
+
+        return true;
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'block';
+        if(modalId === 'movieModal') {
+            document.getElementById('addMovieForm').reset();
+        }
+    }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Actualizar los placeholders con ejemplos más claros
             const trailerInputs = document.querySelectorAll('input[name="trailer"]');
