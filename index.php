@@ -401,7 +401,37 @@
             <button class="add-button" onclick="openModal('movieModal')">Agregar Nueva Película</button>
 
             <!-- Modal para agregar película -->
-            
+            <div id="movieModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('movieModal')">&times;</span>
+                    <h2>Agregar Nueva Película</h2>
+                    <form class="movie-form" id="addMovieForm" onsubmit="return submitMovie(event)">
+                        <div class="form-group">
+                            <label for="title">Título:</label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="year">Año:</label>
+                            <input type="number" id="year" name="year" required min="1900" max="2024">
+                        </div>
+                        <div class="form-group">
+                            <label for="synopsis">Sinopsis:</label>
+                            <textarea id="synopsis" name="synopsis" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cover">URL de la Portada:</label>
+                            <input type="url" id="cover" name="cover" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trailer">URL del Trailer (YouTube):</label>
+                            <input type="url" id="trailer" name="trailer" 
+                                placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..." 
+                                onchange="this.value = convertToEmbedUrl(this.value)" required>
+                        </div>
+                        <button type="submit" class="submit-btn">Agregar Película</button>
+                    </form>
+                </div>
+            </div>
 
             <div style="margin-bottom: 20px;">
                 <input type="text" id="searchInput" class="search-bar" placeholder="Buscar películas..." onkeyup="filterMovies()">
@@ -469,7 +499,7 @@
                     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8", $user, $pass);
                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     
-                    $stmt = $pdo->query('SELECT * FROM movies ORDER BY year DESC');
+                    $stmt = $pdo->query('SELECT * FROM movies ORDER BY id DESC');
                     while ($movie = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         echo '<div class="movie-card">';
                         echo '<img src="' . htmlspecialchars($movie['cover']) . '" alt="' . htmlspecialchars($movie['title']) . '" class="movie-cover">';
@@ -610,8 +640,8 @@
                 if (result.success) {
                     closeModal('movieModal');
                     form.reset();
-                    // Recargar la página actual en lugar de redirigir
-                    window.location.reload();
+                    // Redirigir al index
+                    window.location.href = '/index.php?success=1';
                 } else {
                     throw new Error(result.error || 'Error al agregar la película');
                 }
