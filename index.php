@@ -428,6 +428,7 @@
                                 placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..." 
                                 onchange="this.value = convertToEmbedUrl(this.value)" required>
                         </div>
+                        <button type="submit" class="submit-btn">Agregar Película</button>
                     </form>
                 </div>
             </div>
